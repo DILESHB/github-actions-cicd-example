@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -18,19 +18,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run linter
+      - name: Run lint
         run: npm run lint
 
       - name: Run tests
         run: npm test
 
       - name: Build Docker image
-        if: github.ref == 'refs/heads/main'
-        run: |
-          docker build -t myapp:${{ github.sha }} .
-          echo "Build completed for commit ${{ github.sha }}"
+        run: docker build -t myapp:${{ github.sha }} .
